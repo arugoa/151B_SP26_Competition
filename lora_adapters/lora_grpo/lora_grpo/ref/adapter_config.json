@@ -31,8 +31,8 @@
   "revision": null,
   "target_modules": [
     "down_proj",
-    "qkv_proj",
     "o_proj",
+    "qkv_proj",
     "gate_up_proj"
   ],
   "target_parameters": null,
