@@ -30,10 +30,10 @@
   "rank_pattern": {},
   "revision": null,
   "target_modules": [
-    "down_proj",
+    "gate_up_proj",
     "o_proj",
-    "qkv_proj",
-    "gate_up_proj"
+    "down_proj",
+    "qkv_proj"
   ],
   "target_parameters": null,
   "task_type": "CAUSAL_LM",
