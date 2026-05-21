@@ -6,3 +6,6 @@ __pycache__
 LICENSE
 lora_adapters/lora_adapter_openr1_old
 lora_adapters/lora_adapter_openr1_generate/checkpoints
+lora_adapters/lora_adapter_openr1_fixed
+lora_adapters/lora_adapter_openr1_s1k
+output.csv
