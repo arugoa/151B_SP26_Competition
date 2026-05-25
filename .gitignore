@@ -8,4 +8,7 @@ lora_adapters/lora_adapter_openr1_old
 lora_adapters/lora_adapter_openr1_generate/checkpoints
 lora_adapters/lora_adapter_openr1_fixed
 lora_adapters/lora_adapter_openr1_s1k
-output.csv
+lora_adapters/lora_grpo_combined
+lora_adapters/lora_grpo
+output_1.csv
+output_2.csv
