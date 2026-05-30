@@ -31,14 +31,14 @@ Our fine-tuned LoRA adapters are hosted on HuggingFace Hub. The base model (`Qwe
 ```bash
 # From the repo root, create the expected directory structure:
 mkdir -p lora_adapters/lora_grpo
-mkdir -p lora_adapters/lora_adapter_openr1_generate
+mkdir -p lora_adapters/lora_adapter_openr1_s1k
 
 # Download via huggingface-cli (replace with your actual HF repo paths):
 hf download arihant06/lora_grpo \
-    --local-dir ./lora_adapters/lora_grpo/lora_grpo
+    --local-dir ./lora_adapters/lora_grpo/
 
-hf download arihant06/lora_adapter_openr1_generate \
-    --local-dir ./lora_adapters/lora_adapter_openr1_generate/lora_adapter_openr1_generate
+hf download arihant06/lora_adapter_openr1_s1k \
+    --local-dir ./lora_adapters/lora_adapter_openr1_s1k/
 ```
 
 ### Expected directory structure
@@ -50,8 +50,8 @@ hf download arihant06/lora_adapter_openr1_generate \
 ├── lora_adapters/
 │   ├── lora_grpo/
 │   │   └── lora_grpo/         # GRPO adapter weights
-│   └── lora_adapter_openr1_generate/
-│       └── lora_adapter_openr1_generate/   # SFT adapter weights
+│   └── lora_adapter_openr1_s1k/
+│       └── lora_adapter_openr1_s1k/   # SFT adapter weights
 ├── judger.py
 ├── utils.py
 ├── run_inference.py
