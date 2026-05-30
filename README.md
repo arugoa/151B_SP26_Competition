@@ -34,10 +34,10 @@ mkdir -p lora_adapters/lora_grpo
 mkdir -p lora_adapters/lora_adapter_openr1_generate
 
 # Download via huggingface-cli (replace with your actual HF repo paths):
-huggingface-cli download <your-username>/lora_grpo \
+hf download arihant06/lora_grpo \
     --local-dir ./lora_adapters/lora_grpo/lora_grpo
 
-huggingface-cli download <your-username>/lora_adapter_openr1_generate \
+hf download arihant06/lora_adapter_openr1_generate \
     --local-dir ./lora_adapters/lora_adapter_openr1_generate/lora_adapter_openr1_generate
 ```
 
