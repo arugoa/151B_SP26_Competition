@@ -25,8 +25,8 @@ GPU_ID     = "0"                  # CUDA_VISIBLE_DEVICES
 MAX_TOKENS = 4096
 
 # LoRA adapter paths (relative to repo root)
-LORA_GRPO_PATH    = "./lora_adapters/lora_grpo/lora_grpo"
-LORA_SFT_PATH     = "./lora_adapters/lora_adapter_openr1_generate/lora_adapter_openr1_generate"
+LORA_GRPO_PATH    = "./lora_adapters/lora_grpo/lora_grpo_v2"
+LORA_SFT_PATH     = "./lora_adapters/lora_adapter_openr1_s1k/lora_adapter_openr1_s1k"
 
 # System prompts
 SYSTEM_PROMPT_MATH = (
@@ -157,7 +157,14 @@ def run_inference(
     )
 
     # ── Build base prompts ────────────────────────────────────────────────────
-    base_prompts = []
+    #######################################################################################
+    ## When uploading weights to huggingface, need to change these to download correctly ##
+    #######################################################################################
+    QLORA_ADAPTER = LoRARequest("qlora_sft", 1, LORA_SFT_PATH)
+    GRPO_ADAPTER = LoRARequest( "grpo_rl", 2, LORA_GRPO_PATH)
+    #######################################################################################
+    prompts = []
+    requests = []
     for item in data:
         system, user = build_prompt(item["question"], item.get("options"))
         prompt_text = tokenizer.apply_chat_template(
@@ -166,57 +173,25 @@ def run_inference(
             tokenize=False,
             add_generation_prompt=True,
         )
-        base_prompts.append(prompt_text)
+        prompts.append(prompt_text)
+        if bool(item.get("options")):
+            requests.append(QLORA_ADAPTER)
+        else:
+            requests.append(GRPO_ADAPTER)
 
-    # ── Pass 1: GRPO adapter ──────────────────────────────────────────────────
-    print(f"Pass 1 — GRPO adapter ({len(base_prompts)} prompts) ...")
-    grpo_outputs = llm.generate(
-        base_prompts,
+    # ── Forward Pass ─────────────────────────────────────────────────────────
+    print(f"Generating responses for {len(prompts)} questions...")
+    outputs = llm.generate(
+        prompts, 
         sampling_params=sampling_params,
-        lora_request=LoRARequest("grpo_adapter", 1, LORA_GRPO_PATH),
+        lora_request=requests,
     )
-    pass1_responses = [out.outputs[0].text.strip() for out in grpo_outputs]
-
-    # ── Build second-pass prompts (base prompt + pass-1 response as context) ──
-    pass2_prompts = []
-    for base_prompt, pass1_resp in zip(base_prompts, pass1_responses):
-        # Append the first-pass answer as an "assistant" turn so the model can
-        # reason over it and potentially refine its answer.
-        pass2_prompt = tokenizer.apply_chat_template(
-            [
-                {"role": "assistant", "content": pass1_resp},
-                {
-                    "role": "user",
-                    "content": (
-                        "Review your reasoning above. "
-                        "If correct, confirm the answer. "
-                        "If there is an error, correct it. "
-                        "Put the final answer inside \\boxed{}."
-                    ),
-                },
-            ],
-            tokenize=False,
-            add_generation_prompt=True,
-        )
-        # Prepend the original system+user prompt for full context
-        pass2_prompts.append(base_prompt + pass2_prompt)
-
-    # ── Pass 2: SFT adapter ───────────────────────────────────────────────────
-    print(f"Pass 2 — SFT adapter ({len(pass2_prompts)} prompts) ...")
-    sft_outputs = llm.generate(
-        pass2_prompts,
-        sampling_params=sampling_params,
-        lora_request=LoRARequest("sft_adapter", 2, LORA_SFT_PATH),
-    )
-    pass2_responses = [out.outputs[0].text.strip() for out in sft_outputs]
 
     # ── Post-process & extract answers ───────────────────────────────────────
     print("Post-processing answers ...")
-    records = []
+    results = []
     for item, response in tqdm(zip(data, pass2_responses), total=len(data)):
-        is_mcq = bool(item.get("options"))
-        answer = normalize_answer(response, is_mcq)
-        records.append({"id": item["id"], "answer": answer})
+        results.append({"id": item["id"], "response": response})
 
     # ── Write CSV ─────────────────────────────────────────────────────────────
     out_path = Path(output_path)
@@ -224,10 +199,9 @@ def run_inference(
 
     with open(out_path, "w") as f:
         f.write("id,answer\n")
-        for r in records:
-            # Escape commas inside answers (e.g. "3, 7")
-            answer_escaped = f'"{r["answer"]}"' if "," in str(r["answer"]) else r["answer"]
-            f.write(f"{r['id']},{answer_escaped}\n")
+        for r in results:
+            record = {"id": r["id"], "response": r["response"]}
+            f.write(json.dumps(record) + "\n")
 
     print(f"\nDone. {len(records)} answers written to {out_path}")
 
