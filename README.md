@@ -103,10 +103,9 @@ python run_inference.py \
 
 The function will:
 1. Load the INT8-quantized base model via vLLM with LoRA support enabled
-2. Run a **first pass** using the GRPO adapter (`lora_grpo`) to generate initial responses
-3. Run a **second pass** using the SFT adapter (`lora_adapter_openr1_generate`) on the combined prompt+first-pass output
-4. Extract final answers from `\boxed{}` (MCQ: letter; free-form: value/list)
-5. Write `results/submission.csv` with columns `id` and `answer`
+2. Load the QLoRA adapter for any MCQ and GRPO adapter for any FRQ
+3. Run the forward pass for each question
+4. Write `results/submission.csv` with columns `id` and `response`
 
 ---
 
