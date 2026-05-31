@@ -3,4 +3,13 @@
 results
 data
 __pycache__
-LICENSE
+LICENSEadapters/
+data_rs/
+logs/
+results/
+.ipynb_checkpoints/
+qwen3-4b-thinking-numinamath-*/
+*.jsonl
+*.log
+__pycache__/
+=0.26.0
