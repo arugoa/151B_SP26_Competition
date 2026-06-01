@@ -73,9 +73,7 @@ wget -qO- https://astral.sh/uv/install.sh | sh
 uv venv .venv --python python3.13 --seed --clear
 
 # Install dependencies
-.venv/bin/python -m pip install \
-    sympy numpy transformers vllm tqdm bitsandbytes \
-    antlr4-python3-runtime==4.11.1 peft trl pandas datasets accelerate>=0.26.0
+.venv/bin/python -m pip install -r requirements.txt
 
 # Activate
 source .venv/bin/activate
@@ -118,12 +116,12 @@ The function will:
 |---|---|
 | Base model | `Qwen/Qwen3-4B-Thinking-2507` |
 | Quantization | INT8 (BitsAndBytes via vLLM) |
-| `max_tokens` | 4096 |
-| `temperature` | 0.6 |
+| `max_tokens` | 32768 |
+| `temperature` | 0.8 |
 | `top_p` | 0.95 |
 | `top_k` | 20 |
-| `gpu_memory_utilization` | 0.85 |
-| `max_model_len` | 6240 |
+| `gpu_memory_utilization` | 0.90 |
+| `max_model_len` | 32768 |
 | SFT LoRA rank (`r`) | 32 |
 | SFT `lora_alpha` | 64 |
 | SFT training data | `open-r1/OpenR1-Math-220k` (10k samples) |
@@ -135,4 +133,4 @@ The function will:
 
 ## Reproducibility Note
 
-Due to sampling stochasticity (`temperature=0.6`), outputs will not be string-identical across runs. Overall accuracy should remain consistent (within a few percentage points) with our leaderboard submission.
+Due to sampling stochasticity (`temperature=0.8`), outputs will not be string-identical across runs. Overall accuracy should remain consistent (within a few percentage points) with our leaderboard submission.
