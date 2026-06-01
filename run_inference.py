@@ -26,13 +26,14 @@ MAX_TOKENS = 32768
 
 # LoRA adapter paths (relative to repo root)
 LORA_GRPO_PATH    = "./lora_adapters/lora_grpo/lora_grpo/lora_grpo_v2"
-LORA_SFT_PATH     = "./lora_adapters/lora_adapter_openr1_s1k/lora_adapter_openr1_s1k/lora_adapter_openr1_s1k"
+LORA_SFT_PATH     = "./lora_adapters/lora_adapter_openr1_s1k/lora_adapter_openr1_s1k/lora_adapter_openr1_s1k_unquantized_2k"
 
 # System prompts
 SYSTEM_PROMPT_MATH = (
-    "You are an expert mathematician. Solve the problem step-by-step. "
-    "Before you start to calculate, write down your reasoning and the steps you will take to solve the problem. "
-    "Do not change your reasoning after you start calculating, unless there is a serious error. "
+    "You are an expert mathematician. "
+    "Think freely and explore multiple approaches before committing to one. "
+    "If you realize you made an error, correct it immediately and try a different approach. "
+    "Always use Chinese for your reasoning and thought process, but your final answer must be in English. "
     "Put your final answer inside \\boxed{}. "
     "If the problem has multiple sub-answers, separate them by commas inside a single \\boxed{}, "
     "e.g. \\boxed{3, 7}."
@@ -40,6 +41,7 @@ SYSTEM_PROMPT_MATH = (
 
 SYSTEM_PROMPT_MCQ = (
     "You are an expert mathematician. Solve the problem step-by-step. "
+    "Please always use Chinese for your reasoning and thought process, but your final answer has to be in English, and it needs to be clear and accurate. "
     "Read the problem and the answer choices below, then select the single best answer. "
     "Output ONLY the letter of your chosen option inside \\boxed{}, e.g. \\boxed{C}."
 )
@@ -186,24 +188,30 @@ def run_inference(
         sampling_params=sampling_params,
         lora_request=requests,
     )
+    responses = [out.outputs[0].text.strip() for out in outputs]
 
     # ── Post-process & extract answers ───────────────────────────────────────
     print("Post-processing answers ...")
     results = []
-    for item, response in tqdm(zip(data, results), total=len(data)):
-        results.append({"id": item["id"], "response": response})
+    for item, response in tqdm(zip(data, responses), total=len(data)):
+        is_mcq = bool(item.get("options"))
+
+        results.append({
+            "id":       item.get("id"),
+            "is_mcq":   is_mcq,
+            "response": response,
+        })
 
     # ── Write CSV ─────────────────────────────────────────────────────────────
     out_path = Path(output_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(out_path, "w") as f:
-        f.write("id,answer\n")
         for r in results:
-            record = {"id": r["id"], "response": r["response"]}
+            record = {"id": r["id"], "is_mcq": r["is_mcq"], "response": r["response"]}
             f.write(json.dumps(record) + "\n")
 
-    print(f"\nDone. {len(results)} answers written to {out_path}")
+    print(f"Saved {len(results)} records to {out_path}")
 
 
 # ── CLI entry point ────────────────────────────────────────────────────────────

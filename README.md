@@ -33,12 +33,15 @@ Our fine-tuned LoRA adapters are hosted on HuggingFace Hub. The base model (`Qwe
 mkdir -p lora_adapters/lora_grpo
 mkdir -p lora_adapters/lora_adapter_openr1_s1k
 
-# Download via huggingface-cli (replace with your actual HF repo paths):
+# Download via huggingface-cli:
 hf download arihant06/lora_grpo \
     --local-dir ./lora_adapters/lora_grpo/
 
 hf download arihant06/lora_adapter_openr1_s1k \
     --local-dir ./lora_adapters/lora_adapter_openr1_s1k/
+
+hf download arihant06/lora_grpo_combined \
+    --local-dir ./lora_adapters/
 ```
 
 ### Expected directory structure
