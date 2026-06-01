@@ -118,6 +118,7 @@ def run_inference(
     from vllm import LLM, SamplingParams
     from vllm.lora.request import LoRARequest
     from tqdm import tqdm
+    import pandas as pd
 
     # ── Load dataset ──────────────────────────────────────────────────────────
     print(f"Loading dataset from {data_path} ...")
