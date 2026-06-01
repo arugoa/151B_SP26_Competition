@@ -75,6 +75,11 @@ uv venv .venv --python python3.13 --seed --clear
 # Install dependencies
 .venv/bin/python -m pip install -r requirements.txt
 
+# If the above command doesnt work, use the below one:
+.venv/bin/python -m pip install \
+    sympy numpy transformers vllm tqdm bitsandbytes \
+    antlr4-python3-runtime==4.11.1 peft trl pandas datasets accelerate>=0.26.0
+
 # Activate
 source .venv/bin/activate
 ```
