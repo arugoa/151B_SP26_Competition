@@ -72,7 +72,7 @@ The environment requires cuda 13.0 to run, since this was trained using runpods.
 wget -qO- https://astral.sh/uv/install.sh | sh
 
 # Create virtual environment
-uv venv .venv --python python3.13 --seed --clear
+uv venv .venv --python python3.11 --seed --clear
 
 # Install dependencies
 .venv/bin/python -m pip install -r requirements.txt
