@@ -95,7 +95,7 @@ def normalize_answer(response: str, is_mcq: bool) -> str:
 
 def run_inference(
     data_path: str = "data/private.jsonl",
-    output_path: str = "results/submission.csv",
+    output_path: str = "results/submission.jsonl",
 ) -> None:
     """
     Full end-to-end inference pipeline.
@@ -159,12 +159,9 @@ def run_inference(
     )
 
     # ── Build base prompts ────────────────────────────────────────────────────
-    #######################################################################################
-    ## When uploading weights to huggingface, need to change these to download correctly ##
-    #######################################################################################
     QLORA_ADAPTER = LoRARequest("qlora_sft", 1, LORA_SFT_PATH)
     GRPO_ADAPTER = LoRARequest( "grpo_rl", 2, LORA_GRPO_PATH)
-    #######################################################################################
+    
     prompts = []
     requests = []
     for item in data:
@@ -210,6 +207,9 @@ def run_inference(
         for r in results:
             record = {"id": r["id"], "is_mcq": r["is_mcq"], "response": r["response"]}
             f.write(json.dumps(record) + "\n")
+
+    df = pd.read_json(out_path, lines=True)
+    df.to_csv('submission.csv', index=False)
 
     print(f"Saved {len(results)} records to {out_path}")
 
