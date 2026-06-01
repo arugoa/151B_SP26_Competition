@@ -9,6 +9,7 @@ This repository contains our solution for the CSE 151B Spring 2026 Math Reasonin
 
 At inference time, we use a two-pass generation strategy: a first-pass adapter generates initial responses, and a second-pass adapter refines them.
 
+This pipeline is confirmed to be able to fully install and run on an A100SXM on runpods.io
 ---
 
 ## Hardware & Timing
