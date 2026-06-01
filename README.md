@@ -25,7 +25,7 @@ This pipeline is confirmed to be able to fully install and run on an A100SXM pod
 
 ## Model Weights
 
-Our fine-tuned LoRA adapters are hosted on HuggingFace Hub. The base model (`Qwen/Qwen3-4B-Thinking-2507`) is loaded directly from HuggingFace at runtime — no manual download required.
+Our fine-tuned LoRA adapters are hosted on HuggingFace Hub. The base model (`Qwen/Qwen3-4B-Thinking-2507`) is loaded directly from HuggingFace at runtime, so no manual download is required.
 
 **LoRA adapters** (download and place as shown below):
 
