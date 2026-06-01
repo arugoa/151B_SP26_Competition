@@ -15,8 +15,8 @@ At inference time, we use a two-pass generation strategy: a first-pass adapter g
 
 | Item | Details |
 |---|---|
-| **GPU** | NVIDIA A100 (40 GB) |
-| **Approximate inference time** | ~30–45 minutes on the full private set |
+| **GPU** | NVIDIA A100 SXM (80 GB) |
+| **Approximate inference time** | ~90 minutes on the full private set |
 | **Training time (SFT)** | ~4 hours |
 | **Training time (GRPO)** | ~6 hours |
 
@@ -68,6 +68,7 @@ hf download arihant06/lora_grpo_combined \
 The environment requires cuda 13.0 to run, since this was trained using runpods. Please use the requirements.txt file for the environment, or the secondary command if the requirements file does not work.
 
 Another common issue is different systems requiring python3.13 vs 3.11. This is due to various architectural design differences which we could not resolve.
+If installations are not working, replace python3.11 with python3.13.
 
 ```bash
 # Install uv (fast package manager)
