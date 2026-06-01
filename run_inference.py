@@ -22,7 +22,7 @@ from typing import Optional
 # ── Configuration ──────────────────────────────────────────────────────────────
 MODEL_ID   = "Qwen/Qwen3-4B-Thinking-2507"
 GPU_ID     = "0"                  # CUDA_VISIBLE_DEVICES
-MAX_TOKENS = 4096
+MAX_TOKENS = 32768
 
 # LoRA adapter paths (relative to repo root)
 LORA_GRPO_PATH    = "./lora_adapters/lora_grpo/lora_grpo_v2"
@@ -133,22 +133,22 @@ def run_inference(
     print("Loading model with vLLM (INT8, LoRA enabled) ...")
     llm = LLM(
         model=MODEL_ID,
-        quantization="bitsandbytes",
-        load_format="bitsandbytes",
+        #quantization="bitsandbytes",
+        #load_format="bitsandbytes",
         enable_prefix_caching=False,
-        gpu_memory_utilization=0.85,
-        max_model_len=6240,
+        gpu_memory_utilization=0.90,
+        max_model_len=32768,
         trust_remote_code=True,
         max_num_seqs=256,
         max_num_batched_tokens=32768,
-        enable_lora=True,
+        enable_lora=True,     # <-------------------- Enable/Disable LoRA support
         max_lora_rank=64,
     )
     print("Model loaded.")
 
     sampling_params = SamplingParams(
         max_tokens=MAX_TOKENS,
-        temperature=0.6,
+        temperature=0.8,
         top_p=0.95,
         top_k=20,
         min_p=0.0,
@@ -190,7 +190,7 @@ def run_inference(
     # ── Post-process & extract answers ───────────────────────────────────────
     print("Post-processing answers ...")
     results = []
-    for item, response in tqdm(zip(data, pass2_responses), total=len(data)):
+    for item, response in tqdm(zip(data, results), total=len(data)):
         results.append({"id": item["id"], "response": response})
 
     # ── Write CSV ─────────────────────────────────────────────────────────────
@@ -203,7 +203,7 @@ def run_inference(
             record = {"id": r["id"], "response": r["response"]}
             f.write(json.dumps(record) + "\n")
 
-    print(f"\nDone. {len(records)} answers written to {out_path}")
+    print(f"\nDone. {len(results)} answers written to {out_path}")
 
 
 # ── CLI entry point ────────────────────────────────────────────────────────────
