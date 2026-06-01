@@ -54,8 +54,9 @@ hf download arihant06/lora_grpo_combined \
 ├── lora_adapters/
 │   ├── lora_grpo/
 │   │   └── lora_grpo/         # GRPO adapter weights
-│   └── lora_adapter_openr1_s1k/
-│       └── lora_adapter_openr1_s1k/   # SFT adapter weights
+│   ├── lora_adapter_openr1_s1k/
+│   │   └── lora_adapter_openr1_s1k/   # SFT adapter weights
+│   └── lora_grpo_combined/    # combined adapter weights
 ├── judger.py
 ├── utils.py
 ├── run_inference.py
@@ -76,7 +77,7 @@ If installations are not working, replace python3.11 with python3.13.
 wget -qO- https://astral.sh/uv/install.sh | sh
 
 # Create virtual environment
-uv venv .venv --python python3.11 --seed --clear
+uv venv .venv --python python3.13 --seed --clear
 
 # Install dependencies
 .venv/bin/python -m pip install -r requirements.txt
