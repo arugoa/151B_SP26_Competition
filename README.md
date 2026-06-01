@@ -9,7 +9,7 @@ This repository contains our solution for the CSE 151B Spring 2026 Math Reasonin
 
 At inference time, we use one-pass generation, where the model selects an adapter for a question and utilizes it to answer the question. 
 
-This pipeline is confirmed to be able to fully install and run on an A100SXM on runpods.io
+This pipeline is confirmed to be able to fully install and run on an A100SXM pod through runpods.io
 ---
 
 ## Hardware & Timing
