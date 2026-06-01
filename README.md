@@ -67,6 +67,8 @@ hf download arihant06/lora_grpo_combined \
 
 The environment requires cuda 13.0 to run, since this was trained using runpods. Please use the requirements.txt file for the environment, or the secondary command if the requirements file does not work.
 
+Another common issue is different systems requiring python3.13 vs 3.11. This is due to various architectural design differences which we could not resolve.
+
 ```bash
 # Install uv (fast package manager)
 wget -qO- https://astral.sh/uv/install.sh | sh
@@ -80,7 +82,7 @@ uv venv .venv --python python3.11 --seed --clear
 # If the above command doesnt work, use the below one:
 .venv/bin/python -m pip install \
     sympy numpy transformers vllm tqdm bitsandbytes \
-    antlr4-python3-runtime==4.11.1 peft trl pandas datasets accelerate>=0.26.0
+    "antlr4-python3-runtime==4.11.1" peft trl pandas datasets "accelerate>=0.26.0"
 
 # Activate
 source .venv/bin/activate
