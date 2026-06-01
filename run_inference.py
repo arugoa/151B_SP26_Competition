@@ -26,7 +26,7 @@ MAX_TOKENS = 32768
 
 # LoRA adapter paths (relative to repo root)
 LORA_GRPO_PATH    = "./lora_adapters/lora_grpo/lora_grpo/lora_grpo_v2"
-LORA_SFT_PATH     = "./lora_adapters/lora_adapter_openr1_s1k/lora_adapter_openr1_s1k"
+LORA_SFT_PATH     = "./lora_adapters/lora_adapter_openr1_s1k/lora_adapter_openr1_s1k/lora_adapter_openr1_s1k"
 
 # System prompts
 SYSTEM_PROMPT_MATH = (
