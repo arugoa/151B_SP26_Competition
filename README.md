@@ -65,6 +65,8 @@ hf download arihant06/lora_grpo_combined \
 
 ## Environment Setup
 
+The environment requires cuda 13.0 to run, since this was trained using runpods. Please use the requirements.txt file for the environment, or the secondary command if the requirements file does not work.
+
 ```bash
 # Install uv (fast package manager)
 wget -qO- https://astral.sh/uv/install.sh | sh
