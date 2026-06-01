@@ -2,12 +2,12 @@
 
 ## Overview
 
-This repository contains our solution for the CSE 151B Spring 2026 Math Reasoning Competition. We fine-tuned **Qwen3-4B-Thinking** (INT8 quantized via vLLM) using a two-stage training pipeline:
+This repository contains our solution for the CSE 151B Spring 2026 Math Reasoning Competition. We fine-tuned **Qwen3-4B-Thinking** (Unquantized BF-16) using a two-stage training pipeline:
 
 1. **SFT (Supervised Fine-Tuning)** on the `open-r1/OpenR1-Math-220k` dataset (10k samples — 3k MCQ + 7k free-form)
 2. **GRPO (Group Relative Policy Optimization)** on the competition public dataset using a math accuracy reward
 
-At inference time, we use a two-pass generation strategy: a first-pass adapter generates initial responses, and a second-pass adapter refines them.
+At inference time, we use one-pass generation, where the model selects an adapter for a question and utilizes it to answer the question. 
 
 This pipeline is confirmed to be able to fully install and run on an A100SXM on runpods.io
 ---
@@ -114,7 +114,7 @@ python run_inference.py \
 ```
 
 The function will:
-1. Load the INT8-quantized base model via vLLM with LoRA support enabled
+1. Load the Unquantized BF-16 base model via vLLM with LoRA support enabled
 2. Load the QLoRA adapter for any MCQ and GRPO adapter for any FRQ
 3. Run the forward pass for each question
 4. Write `results/submission.csv` with columns `id` and `response`
@@ -126,14 +126,14 @@ The function will:
 | Parameter | Value |
 |---|---|
 | Base model | `Qwen/Qwen3-4B-Thinking-2507` |
-| Quantization | INT8 (BitsAndBytes via vLLM) |
+| Quantization |Unquantized BF-16 |
 | `max_tokens` | 32768 |
 | `temperature` | 0.8 |
 | `top_p` | 0.95 |
 | `top_k` | 20 |
 | `gpu_memory_utilization` | 0.90 |
 | `max_model_len` | 32768 |
-| SFT LoRA rank (`r`) | 32 |
+| SFT LoRA rank (`r`) | 64 |
 | SFT `lora_alpha` | 64 |
 | SFT training data | `open-r1/OpenR1-Math-220k` (10k samples) |
 | GRPO `num_generations` | 2 |
