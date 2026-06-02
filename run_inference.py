@@ -100,10 +100,9 @@ def run_inference(
     """
     Full end-to-end inference pipeline.
 
-    1. Loads the INT8-quantized Qwen3-4B-Thinking base model via vLLM with LoRA enabled.
-    2. First pass  — GRPO adapter generates initial reasoning + answer.
-    3. Second pass — SFT adapter refines using the first-pass output as additional context.
-    4. Extracts final answers and writes submission CSV.
+    1. Loads the BF-16 unquantized Qwen3-4B-Thinking base model via vLLM with LoRA enabled.
+    2. Selects appropriate adapter for each question: SFT for MCQ and GRPO for FRQ on a single forward pass.
+    3. Extracts final answers and writes submission CSV.
 
     Parameters
     ----------
@@ -133,7 +132,7 @@ def run_inference(
     tokenizer.pad_token = tokenizer.eos_token
 
     # ── Load model ────────────────────────────────────────────────────────────
-    print("Loading model with vLLM (INT8, LoRA enabled) ...")
+    print("Loading model with vLLM (BF-16, LoRA enabled) ...")
     llm = LLM(
         model=MODEL_ID,
         #quantization="bitsandbytes",
